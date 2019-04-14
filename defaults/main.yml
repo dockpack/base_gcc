@@ -1,0 +1,43 @@
+---
+
+# Corporate feature: toggles desired state
+compilers_present: present
+
+# yum groupinstall @Development
+development_groupinstall: true
+
+# Software collections offer latest versions of programming languages
+collections_enabled: false
+
+# major release of software collections' devtoolset
+GCCVER: 7
+cplusplus_devtoolset: "devtoolset-{{ GCCVER }}"
+
+cplusplus_dts_rpms:
+  - "{{ cplusplus_devtoolset }}-binutils"
+  - "{{ cplusplus_devtoolset }}-gcc"
+  - "{{ cplusplus_devtoolset }}-gcc-c++"
+  - "{{ cplusplus_devtoolset }}-make"
+
+# optional rpms
+cplusplusrpms:
+  - autoconf
+  - automake
+  - git
+  - gcc
+  - file-devel
+  - make
+  - openssl-devel
+  - libstdc++-docs
+  - ncurses-devel
+
+# Ubuntu & Debian only basic compiler support
+cplusplusapts:
+  - build-essential
+  - autoconf
+  - automake
+  - g++
+  - gcc
+  - git
+  - libc6-dev
+  - make

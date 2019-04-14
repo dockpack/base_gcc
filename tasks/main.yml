@@ -1,0 +1,109 @@
+---
+
+- name: ensure directory exists
+  file:
+    path: /root
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+  tags:
+    - base_gcc
+
+- name: copy goss tests template
+  template:
+    src: test_gcc.yml.j2
+    dest: /root/test_gcc.yml
+  tags:
+    - base_gcc
+
+- name: yum install development tools
+  when: ansible_os_family == 'RedHat' and development_groupinstall
+  yum:
+    name: "@Development"
+    state: "{{ compilers_present }}"
+  tags:
+    - base_gcc
+
+- name: install centos software collections
+  package:
+    name: centos-release-scl-rh
+    state: present
+  when: collections_enabled and ansible_distribution == 'CentOS'
+  tags:
+    - base_gcc
+
+- name: enable rhel software collections
+  command: "yum-config-manager --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms"
+  when: collections_enabled and  ansible_distribution == 'Red Hat Enterprise Linux'
+  tags:
+    - base_gcc
+
+- name: yum install devtoolset rpms
+  yum:
+    name: "{{ cplusplus_dts_rpms }}"
+    state: "{{ compilers_present }}"
+  when: collections_enabled and ansible_os_family == 'RedHat'
+  tags:
+    - base_gcc
+
+- name: remove broken sudo from devtoolset for security
+  file:
+    path: "/opt/rh/{{ cplusplus_devtoolset }}/root/usr/bin/sudo"
+    state: absent
+  when: collections_enabled and ansible_os_family == 'RedHat'
+  tags:
+    - base_gcc
+
+- name: enable devtoolset
+  file:
+    src: "/opt/rh/{{ cplusplus_devtoolset }}/enable"
+    path: /etc/profile.d/devtoolset.sh
+    state: link
+  when: collections_enabled and ansible_os_family == 'RedHat'
+  tags:
+    - base_gcc
+
+- name: disable devtoolset
+  file:
+    src: "/opt/rh/{{ cplusplus_devtoolset }}/enable"
+    path: /etc/profile.d/devtoolset.sh
+    state: absent
+  when: not collections_enabled and ansible_os_family == 'RedHat'
+  tags:
+    - base_gcc
+
+- name: yum install additional tools
+  when: ansible_os_family == 'RedHat'
+  yum:
+    name: "{{ cplusplusrpms }}"
+    state: "{{ compilers_present }}"
+    skip_broken: true
+  tags:
+    - base_gcc
+
+- name: source devtoolset enable file
+  when: collections_enabled and ansible_os_family == 'RedHat'
+  set_fact:
+    cmd_env: "source /opt/rh/{{ cplusplus_devtoolset }}/enable && "
+
+- name: apt install packages for C++ development
+  when: ansible_os_family == 'Debian'
+  apt:
+    pkg: "{{ cplusplusapts }}"
+    update_cache: yes
+    cache_valid_time: 86400
+    state: "{{ compilers_present }}"
+  tags:
+    - base_gcc
+
+- name: what is my compiler?
+  shell: "{{ cmd_env | default('') }} gcc --version"
+  register: gcc_version
+  changed_when: false
+  tags:
+    - skip_ansible_lint
+
+- name: Display details about gcc version
+  debug:
+    msg: "{{ gcc_version.stdout_lines }}"

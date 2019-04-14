@@ -1,0 +1,11 @@
+---
+# Molecule managed
+package:
+  automake:
+    installed: true
+  autoconf:
+    installed: true
+  gcc:
+    installed: true
+  make:
+    installed: true

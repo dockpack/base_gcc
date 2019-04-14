@@ -1,0 +1,26 @@
+---
+
+galaxy_info:
+  author: Bas Meijer
+  description: Ansible role to install GNU C/C++ Compilers
+  company: dockpack
+
+  license: MIT
+
+  min_ansible_version: 1.9.0
+
+  platforms:
+    - name: EL
+      versions:
+        - 6
+        - 7
+  galaxy_tags:
+    - system
+    - development
+    - buildserver
+    - gcc
+    - automake
+    - autoconf
+    - centos
+
+dependencies: []

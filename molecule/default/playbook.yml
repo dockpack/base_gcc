@@ -1,0 +1,8 @@
+---
+- hosts: all
+  vars:
+    development_groupinstall: false
+
+  roles:
+    - role: base_gcc
+      collections_enabled: true

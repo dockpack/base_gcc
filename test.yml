@@ -1,0 +1,14 @@
+---
+- hosts: all
+  connection: local
+  vars_files:
+    - defaults/main.yml
+
+  tasks:
+    - name: set string
+      set_fact:
+        options: "{{ compile_boost_with }}"
+
+    - name: display string
+      debug:
+        msg: "{{ compile_boost_with }}"

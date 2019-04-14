@@ -1,0 +1,12 @@
+package:
+{% if ansible_os_family == 'RedHat' %}
+{% for item in cplusplusrpms %}
+  {{ item }}:
+    installed: true
+{% endfor %}
+{% else %}
+{% for item in cplusplusapts %}
+  {{ item }}:
+    installed: true
+{% endfor %}
+{% endif %}

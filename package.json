@@ -1,0 +1,10 @@
+{
+  "name": "dockpack.base_cplusplus",
+  "version": "0.3.5",
+  "scripts": {
+    "release": "release-it"
+  },
+  "devDependencies": {
+    "release-it": "^7.6.1"
+  }
+}
