@@ -10,8 +10,8 @@ development_groupinstall: true
 collections_enabled: false
 
 # major release of software collections' devtoolset
-GCCVER: 7
-cplusplus_devtoolset: "devtoolset-{{ GCCVER }}"
+DTSVER: 7
+cplusplus_devtoolset: "devtoolset-{{ DTSVER }}"
 
 cplusplus_dts_rpms:
   - "{{ cplusplus_devtoolset }}-binutils"
