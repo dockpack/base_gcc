@@ -27,7 +27,7 @@
 
 - name: install centos software collections
   package:
-    name: centos-release-scl-rh
+    name: centos-release-scl
     state: present
   when: collections_enabled and ansible_distribution == 'CentOS'
   tags:
@@ -35,7 +35,13 @@
 
 - name: enable rhel software collections
   command: "yum-config-manager --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms"
-  when: collections_enabled and  ansible_distribution == 'Red Hat Enterprise Linux'
+  when: collections_enabled and ansible_distribution == 'Red Hat Enterprise Linux'
+  tags:
+    - base_gcc
+
+- name: enable legacy software collections
+  when: collections_enabled and DTSVER < 6
+  command: "yum-config-manager --enable centos-sclo-rh-testing"
   tags:
     - base_gcc
 
