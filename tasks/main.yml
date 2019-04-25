@@ -25,9 +25,14 @@
   tags:
     - base_gcc
 
+- name: validate software collection version
+  when: collections_enabled and DTSVER not in (4,6,7)
+  fail:
+    msg: "devtoolset version not supported"
+
 - name: install centos software collections
   package:
-    name: centos-release-scl-rh
+    name: centos-release-scl
     state: present
   when: collections_enabled and ansible_distribution == 'CentOS'
   tags:
@@ -35,7 +40,30 @@
 
 - name: enable rhel software collections
   command: "yum-config-manager --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms"
-  when: collections_enabled and  ansible_distribution == 'Red Hat Enterprise Linux'
+  when: collections_enabled and ansible_distribution == 'Red Hat Enterprise Linux'
+  tags:
+    - base_gcc
+
+- name: enable legacy software collections
+  when: collections_enabled and DTSVER < 6
+  command: "yum-config-manager --enable centos-sclo-rh-testing"
+  changed_when: no
+  tags:
+    - base_gcc
+
+- name: configure legacy software collection
+  when: collections_enabled and DTSVER < 6
+  set_fact:
+    cplusplusrpms:
+      - autoconf
+      - automake
+      - binutils
+      - git
+      - file-devel
+      - make
+      - openssl-devel
+      - libstdc++-docs
+      - ncurses-devel
   tags:
     - base_gcc
 
@@ -106,4 +134,4 @@
 
 - name: Display details about gcc version
   debug:
-    msg: "{{ gcc_version.stdout_lines }}"
+    msg: "{{ gcc_version.stdout_lines[0] }}"
