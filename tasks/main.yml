@@ -25,6 +25,11 @@
   tags:
     - base_gcc
 
+- name: validate software collection version
+  when: collections_enabled and DTSVER not in (4,6,7)
+  fail:
+    msg: "devtoolset version not supported"
+
 - name: install centos software collections
   package:
     name: centos-release-scl
@@ -42,6 +47,25 @@
 - name: enable legacy software collections
   when: collections_enabled and DTSVER < 6
   command: "yum-config-manager --enable centos-sclo-rh-testing"
+  changed_when: no
+  tags:
+    - base_gcc
+
+- name: configure legacy software collection
+  when: collections_enabled and DTSVER < 6
+  set_fact:
+    cplusplusrpms:
+      - autoconf
+      - automake
+      - binutils
+      - git
+      - file-devel
+      - make
+      - openssl-devel
+      - libstdc++-docs
+      - ncurses-devel
+    cplusplus_dts_rpms:
+      - "devtoolset-{{ DTSVER }}-gcc-c++"
   tags:
     - base_gcc
 
@@ -112,4 +136,4 @@
 
 - name: Display details about gcc version
   debug:
-    msg: "{{ gcc_version.stdout_lines }}"
+    msg: "{{ gcc_version.stdout_lines[0] }}"
