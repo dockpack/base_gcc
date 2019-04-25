@@ -14,10 +14,7 @@ DTSVER: 7
 cplusplus_devtoolset: "devtoolset-{{ DTSVER }}"
 
 cplusplus_dts_rpms:
-  - "{{ cplusplus_devtoolset }}-binutils"
-  - "{{ cplusplus_devtoolset }}-gcc"
-  - "{{ cplusplus_devtoolset }}-gcc-c++"
-  - "{{ cplusplus_devtoolset }}-make"
+  - "{{ cplusplus_devtoolset }}-toolchain"
 
 # optional rpms
 cplusplusrpms:

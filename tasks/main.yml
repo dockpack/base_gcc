@@ -64,8 +64,6 @@
       - openssl-devel
       - libstdc++-docs
       - ncurses-devel
-    cplusplus_dts_rpms:
-      - "devtoolset-{{ DTSVER }}-gcc-c++"
   tags:
     - base_gcc
 
