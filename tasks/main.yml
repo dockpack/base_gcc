@@ -46,14 +46,20 @@
     - base_gcc
 
 - name: enable legacy software collections
-  when: collections_enabled and DTSVER < 6
+  when: collections_enabled and DTSVER|int < 6 and ansible_os_family == 'RedHat'
   command: "yum-config-manager --enable centos-sclo-rh-testing"
   changed_when: no
   tags:
     - base_gcc
 
 - name: configure legacy software collection
-  when: collections_enabled and DTSVER < 6
+  when: collections_enabled and DTSVER|int == 3
+  set_fact:
+    cplusplus_dts_rpms:
+      - "{{ cplusplus_devtoolset }}-gcc-c++"
+
+- name: configure legacy software collection
+  when: collections_enabled and DTSVER|int < 6
   set_fact:
     cplusplusrpms:
       - autoconf
