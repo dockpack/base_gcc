@@ -38,6 +38,12 @@
   tags:
     - base_gcc
 
+- name: ensure yum-utils is installed
+  package:
+    name: yum-utils
+    state: present
+  when: collections_enabled and ansible_os_family == 'RedHat'
+
 - name: enable rhel software collections
   command: "yum-config-manager --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms"
   when: collections_enabled and ansible_distribution == 'Red Hat Enterprise Linux'
