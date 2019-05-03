@@ -17,6 +17,14 @@
   tags:
     - base_gcc
 
+- name: ensure yum-utils is installed
+  package:
+    name: yum-utils
+    state: present
+  when: collections_enabled and ansible_os_family == 'RedHat'
+  tags:
+    - base_gcc
+
 - name: yum install development tools
   when: ansible_os_family == 'RedHat' and development_groupinstall
   yum:
@@ -26,37 +34,57 @@
     - base_gcc
 
 - name: install centos software collections
+  when:
+    - collections_enabled
+    - DTSVER|int > 3 or ansible_distribution_major_version|int == 7
+    - ansible_distribution == 'CentOS'
   package:
     name: centos-release-scl
     state: present
-  when: collections_enabled and ansible_distribution == 'CentOS'
   tags:
     - base_gcc
 
-- name: ensure yum-utils is installed
-  package:
-    name: yum-utils
-    state: present
-  when: collections_enabled and ansible_os_family == 'RedHat'
+- name: install scientific linux software collections
+  when:
+    - collections_enabled
+    - DTSVER|int == 3
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version|int == 6
+  get_url:
+    url: "{{ cern_repo_file }}"
+    dest: /etc/yum.repos.d
+    owner: root
+    group: root
+  tags:
+    - base_gcc
 
 - name: enable rhel software collections
   command: "yum-config-manager --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms"
-  when: collections_enabled and ansible_distribution == 'Red Hat Enterprise Linux'
+  when:
+    - collections_enabled
+    - ansible_distribution == 'Red Hat Enterprise Linux'
   tags:
     - base_gcc
 
-- name: enable legacy software collections
-  when: collections_enabled and DTSVER|int < 6 and ansible_os_family == 'RedHat'
+- name: enable devtoolset-4
+  when:
+    - collections_enabled
+    - DTSVER|int == 4
+    - ansible_os_family == 'RedHat'
   command: "yum-config-manager --enable centos-sclo-rh-testing"
   changed_when: no
   tags:
     - base_gcc
 
-- name: configure legacy software collection
-  when: collections_enabled and DTSVER|int == 3
+- name: configure legacy software collections
+  when: collections_enabled and DTSVER|int <= 3
   set_fact:
     cplusplus_dts_rpms:
       - "{{ cplusplus_devtoolset }}-gcc-c++"
+    dts_disable_gpg_check: true
+  tags:
+    - base_gcc
+    - test
 
 - name: configure legacy software collection
   when: collections_enabled and DTSVER|int < 6
@@ -73,11 +101,13 @@
       - ncurses-devel
   tags:
     - base_gcc
+    - test
 
 - name: yum install devtoolset rpms
   yum:
     name: "{{ cplusplus_dts_rpms }}"
     state: "{{ compilers_present }}"
+    disable_gpg_check: "{{ dts_disable_gpg_check }}"
   when: collections_enabled and ansible_os_family == 'RedHat'
   tags:
     - base_gcc
@@ -121,6 +151,9 @@
   when: collections_enabled and ansible_os_family == 'RedHat'
   set_fact:
     cmd_env: "source /opt/rh/{{ cplusplus_devtoolset }}/enable && "
+  tags:
+    - test
+    - base_gcc
 
 - name: apt install packages for C++ development
   when: ansible_os_family == 'Debian'
@@ -138,7 +171,12 @@
   changed_when: false
   tags:
     - skip_ansible_lint
+    - test
+    - base_gcc
 
 - name: Display details about gcc version
   debug:
     msg: "{{ gcc_version.stdout_lines[0] }}"
+  tags:
+    - test
+    - base_gcc
