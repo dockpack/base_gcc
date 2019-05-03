@@ -155,6 +155,27 @@
     - test
     - base_gcc
 
+- name: disable centos-sclo-rh-testing
+  when:
+    - collections_enabled
+    - DTSVER|int == 4
+    - ansible_os_family == 'RedHat'
+  command: "yum-config-manager --disable centos-sclo-rh-testing"
+  changed_when: no
+  tags:
+    - base_gcc
+
+- name: disable slc6-scl
+  when:
+    - collections_enabled
+    - DTSVER|int == 3
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version|int == 6
+  command: "yum-config-manager --disable slc6-scl"
+  changed_when: no
+  tags:
+    - base_gcc
+
 - name: apt install packages for C++ development
   when: ansible_os_family == 'Debian'
   apt:
