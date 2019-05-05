@@ -20,7 +20,6 @@ cplusplus_dts_rpms:
 cplusplusrpms:
   - autoconf
   - automake
-  - ccache
   - git
   - gcc
   - file-devel
