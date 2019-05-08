@@ -21,6 +21,10 @@
   package:
     name: yum-utils
     state: present
+  register: network_access
+  until: network_access is success
+  retries: 10
+  delay: 2
   when: collections_enabled and ansible_os_family == 'RedHat'
   tags:
     - base_gcc
@@ -30,6 +34,10 @@
   yum:
     name: "@Development"
     state: "{{ compilers_present }}"
+  register: network_access
+  until: network_access is success
+  retries: 10
+  delay: 2
   tags:
     - base_gcc
 
@@ -41,6 +49,10 @@
   package:
     name: centos-release-scl
     state: present
+  register: network_access
+  until: network_access is success
+  retries: 10
+  delay: 2
   tags:
     - base_gcc
 
@@ -108,6 +120,10 @@
     name: "{{ cplusplus_dts_rpms }}"
     state: "{{ compilers_present }}"
     disable_gpg_check: "{{ dts_disable_gpg_check }}"
+  register: network_access
+  until: network_access is success
+  retries: 10
+  delay: 2
   when: collections_enabled and ansible_os_family == 'RedHat'
   tags:
     - base_gcc
@@ -144,6 +160,10 @@
     name: "{{ cplusplusrpms }}"
     state: "{{ compilers_present }}"
     skip_broken: true
+  register: network_access
+  until: network_access is success
+  retries: 10
+  delay: 2
   tags:
     - base_gcc
 
@@ -183,6 +203,10 @@
     update_cache: yes
     cache_valid_time: 86400
     state: "{{ compilers_present }}"
+  register: network_access
+  until: network_access is success
+  retries: 10
+  delay: 2
   tags:
     - base_gcc
 
