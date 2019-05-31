@@ -1,5 +1,5 @@
 {
-  "name": "dockpack.base_cplusplus",
+  "name": "dockpack.base_gcc",
   "version": "1.0.2",
   "scripts": {
     "release": "release-it"
