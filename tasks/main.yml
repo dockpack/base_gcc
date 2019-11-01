@@ -78,7 +78,7 @@
   command: "yum-config-manager --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms"
   when:
     - collections_enabled|bool
-    - ansible_distribution == 'Red Hat Enterprise Linux'
+    - ansible_distribution == 'RedHat'
   tags:
     - base_gcc
 
