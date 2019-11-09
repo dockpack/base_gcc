@@ -20,13 +20,16 @@ cplusplus_dts_rpms:
 cplusplusrpms:
   - autoconf
   - automake
-  - git
+  - bison
+  - ccache
   - gcc
+  - flex
+  - flex-devel
   - file-devel
-  - make
-  - openssl-devel
   - libstdc++-docs
+  - make
   - ncurses-devel
+  - openssl-devel
 
 # Ubuntu & Debian only basic compiler support
 cplusplusapts:
