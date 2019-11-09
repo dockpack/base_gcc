@@ -1,6 +1,6 @@
 {
   "name": "dockpack.base_gcc",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "scripts": {
     "release": "release-it"
   },
