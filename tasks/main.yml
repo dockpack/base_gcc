@@ -29,6 +29,18 @@
   tags:
     - base_gcc
 
+- name: yum install gcc
+  when: ansible_os_family == 'RedHat' and not development_groupinstall
+  yum:
+    name: gcc
+    state: "{{ compilers_present }}"
+  register: network_access
+  until: network_access is success
+  retries: 10
+  delay: 2
+  tags:
+    - base_gcc
+
 - name: yum install development tools
   when: ansible_os_family == 'RedHat' and development_groupinstall
   yum:
