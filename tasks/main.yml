@@ -64,7 +64,7 @@
     - ansible_distribution_major_version|int == 6
   get_url:
     url: "{{ cern_repo_file }}"
-    dest: /etc/yum.repos.d
+    dest: /etc/yum.repos.d/slc6-scl.repo
     owner: root
     group: root
   register: network_access
@@ -111,6 +111,8 @@
       - binutils
       - git
       - file-devel
+      - flex
+      - flex-devel
       - make
       - openssl-devel
       - libstdc++-docs
