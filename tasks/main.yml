@@ -109,6 +109,7 @@
       - autoconf
       - automake
       - binutils
+      - bison
       - git
       - file-devel
       - flex
