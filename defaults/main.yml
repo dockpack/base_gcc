@@ -21,7 +21,6 @@ cplusplusrpms:
   - autoconf
   - automake
   - bison
-  - ccache
   - gcc
   - flex
   - flex-devel
