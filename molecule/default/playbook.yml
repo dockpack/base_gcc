@@ -3,7 +3,7 @@
   vars:
     development_groupinstall: false
     collections_enabled: true
-    DTSVER: 3
+    DTSVER: 7
 
   roles:
     - role: base_gcc
