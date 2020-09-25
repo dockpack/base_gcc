@@ -14,6 +14,7 @@
   template:
     src: test_gcc.yml.j2
     dest: /root/test_gcc.yml
+    mode: 0600
   tags:
     - base_gcc
 
@@ -160,6 +161,7 @@
     src: "/opt/rh/{{ cplusplus_devtoolset }}/enable"
     path: /etc/profile.d/devtoolset.sh
     state: link
+    mode: 0755
   when: collections_enabled and ansible_os_family == 'RedHat'
   tags:
     - base_gcc
