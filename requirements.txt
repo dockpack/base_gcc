@@ -1,3 +1,4 @@
 tox
 molecule==2.22
 docker
+anyconfig>=0.10.0 # not directly required, pinned by Snyk to avoid a vulnerability
