@@ -12,9 +12,6 @@ platforms:
   - name: base-gcc-centos7
     image: centos:7
     privileged: true
-  - name: base-gcc-ubuntu
-    image: ubuntu:xenial
-    privileged: true
 provisioner:
   name: ansible
 verifier:
