@@ -31,7 +31,7 @@ cplusplusrpms:
 
 # Ubuntu & Debian only basic compiler support
 cplusplusapts:
-  - build-essential
+  - build-essentials
   - autoconf
   - automake
   - g++
