@@ -88,6 +88,7 @@
     - base_gcc
 
 - name: enable rhel software collections
+  # yamllint disable-line rule:line-length
   command: "yum-config-manager --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms"
   when:
     - collections_enabled|bool
@@ -101,7 +102,7 @@
     - DTSVER|int == 4
     - ansible_os_family == 'RedHat'
   command: "yum-config-manager --enable centos-sclo-rh-testing"
-  changed_when: no
+  changed_when: false
   tags:
     - base_gcc
 
@@ -165,6 +166,7 @@
   when: collections_enabled and ansible_os_family == 'RedHat'
   tags:
     - base_gcc
+    - notest
 
 - name: disable devtoolset
   file:
@@ -202,7 +204,7 @@
     - DTSVER|int == 4
     - ansible_os_family == 'RedHat'
   command: "yum-config-manager --disable centos-sclo-rh-testing"
-  changed_when: no
+  changed_when: false
   tags:
     - base_gcc
 
@@ -213,7 +215,7 @@
     - ansible_distribution == 'CentOS'
     - ansible_distribution_major_version|int == 6
   command: "yum-config-manager --disable slc6-scl"
-  changed_when: no
+  changed_when: false
   tags:
     - base_gcc
 
@@ -221,7 +223,7 @@
   when: ansible_os_family == 'Debian'
   apt:
     pkg: "{{ cplusplusapts }}"
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 86400
     state: "{{ compilers_present }}"
   register: network_access
