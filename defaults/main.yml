@@ -22,11 +22,13 @@ cplusplusrpms:
   - autoconf
   - automake
   - bison
+  - diffutils
   - flex
   - libstdc++-docs
   - make
   - ncurses-devel
   - openssl-devel
+  - which
 
 # Ubuntu & Debian only basic compiler support
 cplusplusapts:
