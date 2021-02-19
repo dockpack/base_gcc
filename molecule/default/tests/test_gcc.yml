@@ -1,0 +1,23 @@
+---
+# Molecule managed
+package:
+  automake:
+    installed: true
+  autoconf:
+    installed: true
+  make:
+    installed: true
+command:
+  cpp:
+    exit-status: 0
+    stdout: []
+    stderr: []
+    timeout: 0
+  gcc --version:
+    exit-status: 0
+    stderr: []
+  ld --version:
+    exit-status: 0
+    stdout: []
+    stderr: []
+    timeout: 0
