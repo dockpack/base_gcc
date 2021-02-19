@@ -21,11 +21,8 @@ cplusplus_dts_rpms:
 cplusplusrpms:
   - autoconf
   - automake
-  - bison
   - diffutils
-  - flex
   - libstdc++-docs
-  - make
   - ncurses-devel
   - openssl-devel
   - which
