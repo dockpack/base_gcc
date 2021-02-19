@@ -225,7 +225,6 @@
 
 - name: disable devtoolset
   file:
-    src: "/opt/rh/{{ cplusplus_devtoolset }}/enable"
     path: /etc/profile.d/devtoolset.sh
     state: absent
   when:
