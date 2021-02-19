@@ -9,6 +9,12 @@ lint: |
   yamllint .
   ansible-lint
 platforms:
+  - name: base-gcc-ubi8
+    image: registry.access.redhat.com/ubi8/ubi
+    privileged: true
+  - name: base-gcc-centos8
+    image: centos:8.3.2011
+    privileged: true
   - name: base-gcc-centos7
     image: centos:7
     privileged: true

@@ -35,3 +35,6 @@ jobs:
         with:
           image: ${{ matrix.config.image }}
           tag: ${{ matrix.config.tag }}
+        env:
+          RH_KEY: ${{ secrets.RH_KEY }}
+          RH_ORG: ${{ secrets.RH_ORG }}

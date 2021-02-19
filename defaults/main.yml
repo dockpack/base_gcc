@@ -4,6 +4,7 @@
 compilers_present: present
 
 # yum groupinstall @Development
+development_group: "@Development"
 development_groupinstall: true
 
 # Software collections offer latest versions of programming languages
@@ -22,8 +23,6 @@ cplusplusrpms:
   - automake
   - bison
   - flex
-  - flex-devel
-  - file-devel
   - libstdc++-docs
   - make
   - ncurses-devel

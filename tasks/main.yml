@@ -30,23 +30,45 @@
   tags:
     - base_gcc
 
+- name: use new tools on 8
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version|int >= 8
+  set_fact:
+    development_group: '@development tools'
+    collections_enabled: false
+
+- name: manage subscription
+  when:
+    - ansible_distribution == 'RedHat'
+    - ansible_distribution_major_version|int >= 8
+  command: |
+    subscription-manager register \
+      --org={{ lookup('env','RH_ORG') }} \
+      --activationkey={{ lookup('env','RH_KEY') }} \
+      --force
+  args:
+    creates: /etc/pki/consumer/key.pem
+
+- name: yum install development tools
+  when: ansible_os_family == 'RedHat' and development_groupinstall
+  yum:
+    name: "{{ development_group }}"
+    state: "{{ compilers_present }}"
+    update_cache: true
+  register: network_access
+  until: network_access is success
+  retries: 3
+  delay: 3
+  tags:
+    - base_gcc
+
 - name: yum install gcc
   when: ansible_os_family == 'RedHat' and not development_groupinstall
   yum:
     name: gcc
     state: "{{ compilers_present }}"
-  register: network_access
-  until: network_access is success
-  retries: 10
-  delay: 2
-  tags:
-    - base_gcc
-
-- name: yum install development tools
-  when: ansible_os_family == 'RedHat' and development_groupinstall
-  yum:
-    name: "@Development"
-    state: "{{ compilers_present }}"
+    update_cache: true
   register: network_access
   until: network_access is success
   retries: 10
@@ -57,7 +79,7 @@
 - name: install centos software collections
   when:
     - collections_enabled|bool
-    - DTSVER|int > 3 or ansible_distribution_major_version|int == 7
+    - DTSVER|int > 3 or ansible_distribution_major_version|int <= 7
     - ansible_distribution == 'CentOS'
   package:
     name: centos-release-scl
@@ -93,6 +115,7 @@
   when:
     - collections_enabled|bool
     - ansible_distribution == 'RedHat'
+    - ansible_distribution_major_version|int < 8
   tags:
     - base_gcc
 
@@ -136,6 +159,21 @@
     - base_gcc
     - test
 
+- name: yum install additional tools
+  when:
+    - ansible_os_family == 'RedHat'
+  yum:
+    name: "{{ cplusplusrpms }}"
+    state: "{{ compilers_present }}"
+    skip_broken: true
+    update_cache: true
+  register: network_access
+  until: network_access is success
+  retries: 4
+  delay: 2
+  tags:
+    - base_gcc
+
 - name: yum install devtoolset rpms
   yum:
     name: "{{ cplusplus_dts_rpms }}"
@@ -145,15 +183,29 @@
   until: network_access is success
   retries: 10
   delay: 2
-  when: collections_enabled and ansible_os_family == 'RedHat'
+  when:
+    - collections_enabled
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version|int < 8
   tags:
     - base_gcc
+
+- name: manage subscription
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version|int >= 8
+  command: subscription-manager deregister
+  args:
+    removes: /etc/pki/consumer.key
 
 - name: remove broken sudo from devtoolset for security
   file:
     path: "/opt/rh/{{ cplusplus_devtoolset }}/root/usr/bin/sudo"
     state: absent
-  when: collections_enabled and ansible_os_family == 'RedHat'
+  when:
+    - collections_enabled
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version|int < 8
   tags:
     - base_gcc
 
@@ -163,7 +215,10 @@
     path: /etc/profile.d/devtoolset.sh
     state: link
     mode: 0755
-  when: collections_enabled and ansible_os_family == 'RedHat'
+  when:
+    - collections_enabled
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version|int < 8
   tags:
     - base_gcc
     - notest
@@ -173,25 +228,18 @@
     src: "/opt/rh/{{ cplusplus_devtoolset }}/enable"
     path: /etc/profile.d/devtoolset.sh
     state: absent
-  when: not collections_enabled and ansible_os_family == 'RedHat'
-  tags:
-    - base_gcc
-
-- name: yum install additional tools
-  when: ansible_os_family == 'RedHat'
-  yum:
-    name: "{{ cplusplusrpms }}"
-    state: "{{ compilers_present }}"
-    skip_broken: true
-  register: network_access
-  until: network_access is success
-  retries: 10
-  delay: 2
+  when:
+    - not collections_enabled
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version|int < 8
   tags:
     - base_gcc
 
 - name: source devtoolset enable file
-  when: collections_enabled and ansible_os_family == 'RedHat'
+  when:
+    - collections_enabled
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version|int < 8
   set_fact:
     cmd_env: "source /opt/rh/{{ cplusplus_devtoolset }}/enable && "
   tags:
