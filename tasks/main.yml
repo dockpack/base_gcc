@@ -38,27 +38,15 @@
     development_group: '@development tools'
     collections_enabled: false
 
-- name: configure legacy software collection
-  when:
-    - ansible_os_family == 'RedHat'
-    - ansible_distribution_major_version|int >= 8
-  set_fact:
-    cplusplusrpms:
-      - autoconf
-      - automake
-      - make
-      - ncurses-devel
-      - openssl-devel
-  tags:
-    - base_gcc
-    - test
-
 - name: manage subscription
   when:
     - ansible_os_family == 'RedHat'
     - ansible_distribution_major_version|int >= 8
-  # yamllint disable-line rule:line-length
-  command: "subscription-manager register --username={{ lookup('env','RH_USER') }} --password='{{ lookup('env','RH_PASS') }}'"
+  command: |
+    subscription-manager register \
+      --org={{ lookup('env','RH_ORG') }} \
+      --activationkey={{ lookup('env','RH_KEY') }} \
+      --force
   args:
     creates: /etc/pki/consumer/key.pem
 
@@ -67,6 +55,7 @@
   yum:
     name: "{{ development_group }}"
     state: "{{ compilers_present }}"
+    update_cache: true
   register: network_access
   until: network_access is success
   retries: 3
@@ -79,6 +68,7 @@
   yum:
     name: gcc
     state: "{{ compilers_present }}"
+    update_cache: true
   register: network_access
   until: network_access is success
   retries: 10
@@ -176,6 +166,7 @@
     name: "{{ cplusplusrpms }}"
     state: "{{ compilers_present }}"
     skip_broken: true
+    update_cache: true
   register: network_access
   until: network_access is success
   retries: 4
