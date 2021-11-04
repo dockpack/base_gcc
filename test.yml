@@ -5,10 +5,11 @@
     - defaults/main.yml
 
   tasks:
-    - name: set string
+    - name: Set string
       set_fact:
         options: "{{ compile_boost_with }}"
 
-    - name: display string
+    - name: Display string
       debug:
         msg: "{{ compile_boost_with }}"
+...
