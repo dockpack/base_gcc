@@ -1,6 +1,6 @@
 ---
 
-- name: ensure directory exists
+- name: Ensure directory exists
   file:
     path: /root
     state: directory
@@ -10,7 +10,7 @@
   tags:
     - base_gcc
 
-- name: copy goss tests template
+- name: Copy goss tests template
   template:
     src: test_gcc.yml.j2
     dest: /root/test_gcc.yml
@@ -18,7 +18,7 @@
   tags:
     - base_gcc
 
-- name: ensure yum-utils is installed
+- name: Ensure yum-utils is installed
   package:
     name: yum-utils
     state: present
@@ -30,7 +30,7 @@
   tags:
     - base_gcc
 
-- name: use new tools on 8
+- name: Use new tools on 8
   when:
     - ansible_os_family == 'RedHat'
     - ansible_distribution_major_version|int >= 8
@@ -38,14 +38,15 @@
     development_group: '@development tools'
     collections_enabled: false
 
-- name: use new dts name on 8
+
+- name: Use new dts name on 8
   when:
     - ansible_os_family == 'RedHat'
     - ansible_distribution_major_version|int >= 8
   set_fact:
     cplusplus_devtoolset: "gcc-toolset-{{ DTSVER }}"
 
-- name: manage subscription
+- name: Manage subscription
   when:
     - ansible_distribution == 'RedHat'
     - ansible_distribution_major_version|int >= 8
@@ -57,7 +58,7 @@
   args:
     creates: /etc/pki/consumer/key.pem
 
-- name: yum install development tools
+- name: Yum install development tools
   when: ansible_os_family == 'RedHat' and development_groupinstall
   yum:
     name: "{{ development_group }}"
@@ -70,7 +71,7 @@
   tags:
     - base_gcc
 
-- name: yum install gcc
+- name: Yum install gcc
   when: ansible_os_family == 'RedHat' and not development_groupinstall
   yum:
     name:
@@ -92,7 +93,7 @@
   tags:
     - base_gcc
 
-- name: install centos software collections
+- name: Install centos software collections
   when:
     - collections_enabled|bool
     - DTSVER|int > 3 or ansible_distribution_major_version|int <= 7
@@ -107,7 +108,7 @@
   tags:
     - base_gcc
 
-- name: install scientific linux software collections
+- name: Install scientific linux software collections
   when:
     - collections_enabled|bool
     - DTSVER|int == 3
@@ -125,7 +126,7 @@
   tags:
     - base_gcc
 
-- name: enable rhel software collections
+- name: Enable rhel software collections
   # yamllint disable-line rule:line-length
   command: "yum-config-manager --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms"
   when:
@@ -135,7 +136,7 @@
   tags:
     - base_gcc
 
-- name: enable devtoolset-4
+- name: Enable devtoolset-4
   when:
     - collections_enabled|bool
     - DTSVER|int == 4
@@ -145,7 +146,7 @@
   tags:
     - base_gcc
 
-- name: configure legacy software collections
+- name: Configure legacy software collections
   when: collections_enabled and DTSVER|int <= 3
   set_fact:
     cplusplus_dts_rpms:
@@ -155,7 +156,7 @@
     - base_gcc
     - test
 
-- name: configure legacy software collection
+- name: Configure legacy software collection
   when: collections_enabled and DTSVER|int < 6
   set_fact:
     cplusplusrpms:
@@ -175,7 +176,7 @@
     - base_gcc
     - test
 
-- name: yum install additional tools
+- name: Yum install additional tools
   when:
     - ansible_os_family == 'RedHat'
   yum:
@@ -190,7 +191,7 @@
   tags:
     - base_gcc
 
-- name: yum install devtoolset rpms
+- name: Yum install devtoolset rpms
   yum:
     name: "{{ cplusplus_dts_rpms }}"
     state: "{{ compilers_present }}"
@@ -208,7 +209,7 @@
   tags:
     - base_gcc
 
-- name: manage subscription
+- name: Remove subscription
   when:
     - ansible_os_family == 'RedHat'
     - ansible_distribution_major_version|int >= 8
@@ -216,7 +217,7 @@
   args:
     removes: /etc/pki/consumer.key
 
-- name: remove broken sudo from devtoolset for security
+- name: Remove broken sudo from devtoolset for security
   file:
     path: "/opt/rh/{{ cplusplus_devtoolset }}/root/usr/bin/sudo"
     state: absent
@@ -227,7 +228,7 @@
   tags:
     - base_gcc
 
-- name: enable devtoolset
+- name: Enable devtoolset
   file:
     src: "/opt/rh/{{ cplusplus_devtoolset }}/enable"
     path: /etc/profile.d/devtoolset.sh
@@ -243,7 +244,7 @@
     - base_gcc
     - notest
 
-- name: disable devtoolset
+- name: Disable devtoolset
   file:
     path: /etc/profile.d/devtoolset.sh
     state: absent
@@ -254,7 +255,7 @@
   tags:
     - base_gcc
 
-- name: source devtoolset enable file
+- name: Source devtoolset enable file
   when:
     - ansible_os_family == 'RedHat'
     - (collections_enabled|bool
@@ -267,7 +268,7 @@
     - test
     - base_gcc
 
-- name: disable centos-sclo-rh-testing
+- name: Disable centos-sclo-rh-testing
   when:
     - collections_enabled|bool
     - DTSVER|int == 4
@@ -277,7 +278,7 @@
   tags:
     - base_gcc
 
-- name: disable slc6-scl
+- name: Disable slc6-scl
   when:
     - collections_enabled|bool
     - DTSVER|int == 3
@@ -288,7 +289,7 @@
   tags:
     - base_gcc
 
-- name: apt install packages for C++ development
+- name: Apt install packages for C++ development
   when: ansible_os_family == 'Debian'
   apt:
     pkg: "{{ cplusplusapts }}"
@@ -302,7 +303,7 @@
   tags:
     - base_gcc
 
-- name: what is my compiler?
+- name: What is my compiler?
   shell: "{{ cmd_env | default('') }} gcc --version"
   register: gcc_version
   changed_when: false
@@ -317,3 +318,4 @@
   tags:
     - test
     - base_gcc
+...

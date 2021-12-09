@@ -8,6 +8,7 @@ lint: |
   set -e
   yamllint .
   ansible-lint
+  ansible-later
 platforms:
   # - name: base-gcc-ubi8
   #    image: registry.access.redhat.com/ubi8/ubi
