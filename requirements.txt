@@ -1,10 +1,15 @@
 # these python extensions are for testing
 tox
+pipx
+attrs>=19.2.0
+rich>=10.0.0,<11.0.0
 sh==1.12.14
-molecule
+ansible==2.9.27
+ansible-later==1.4.1
+molecule==3.2.3
 molecule-docker
-yamllint
-ansible-lint
-docker==4.2.2
+yamllint==1.26.3
+ansible-lint==4.3.7
+docker>=4.3.1
+ssh-audit
 anyconfig>=0.10.0 # not directly required, pinned by Snyk to avoid a vulnerability
-
