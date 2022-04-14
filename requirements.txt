@@ -4,7 +4,7 @@ pipx
 attrs>=19.2.0
 rich>=10.0.0,<11.0.0
 sh==1.12.14
-ansible==2.9.27
+ansible==4.2.0
 ansible-later==1.4.1
 molecule==3.2.3
 molecule-docker
