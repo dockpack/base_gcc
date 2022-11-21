@@ -1,15 +1,25 @@
-[![Galaxy](https://img.shields.io/badge/galaxy-dockpack.base__gcc-blue.svg?style=flat)](https://galaxy.ansible.com/dockpack/base_gcc)[![Build Status](https://api.travis-ci.org/dockpack/base_gcc.svg)](https://travis-ci.org/dockpack/base_gcc)
+[![Galaxy](https://img.shields.io/badge/galaxy-dockpack.base__gcc-blue.svg?style=flat)](https://galaxy.ansible.com/dockpack/base_gcc)
 
 base_gcc is an ansible-role that installs Gnu compiler tools
 
 Requirements
 ------------
 
-RHEL-like system, or Ubuntu
-
+RHEL-like system (RHEL6 RHEL8), or Ubuntu
 
 Role Variables
 --------------
+
+
+DTSVER: the major release of the developer toolset of choice on RedHat systems, corresponds somehow with the GCC version.
+Old versions of DTS require you to host repositories for obsolete versions.
+
+
+```yaml
+DTSVER: 11
+cplusplus_devtoolset: "devtoolset-{{ DTSVER }}"
+```
+
 - Corporate feature: toggles desired state
 `compilers_present: present`
 
