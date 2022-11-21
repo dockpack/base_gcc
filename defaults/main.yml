@@ -10,8 +10,8 @@ development_groupinstall: true
 # Software collections offer latest versions of programming languages
 collections_enabled: false
 
-# major release of software collections' devtoolset
-DTSVER: 7
+# major release of software collections' devtoolset ~= gcc version
+DTSVER: 11
 cplusplus_devtoolset: "devtoolset-{{ DTSVER }}"
 
 cplusplus_dts_rpms:

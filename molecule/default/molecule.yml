@@ -8,7 +8,6 @@ lint: |
   set -e
   yamllint .
   ansible-lint
-  ansible-later
 platforms:
   # - name: base-gcc-ubi8
   #    image: registry.access.redhat.com/ubi8/ubi
@@ -17,7 +16,7 @@ platforms:
     image: quay.io/centos/centos:stream8
     privileged: true
   - name: base-gcc-centos7
-    image: centos:7
+    image: centos:7.9.2009
     privileged: true
 provisioner:
   name: ansible
