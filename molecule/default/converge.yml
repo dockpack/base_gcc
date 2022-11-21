@@ -1,9 +1,12 @@
 ---
 - hosts: all
   vars:
+    role_name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
     development_groupinstall: false
     collections_enabled: true
-    DTSVER: 7
+    DTSVER: 11
 
-  roles:
-    - role: base_gcc
+  tasks:
+    - name: "Include {{ role_name }}"
+      ansible.builtin.include_role:
+        name: "{{ role_name }}"
