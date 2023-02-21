@@ -45,21 +45,9 @@
   set_fact:
     cplusplus_devtoolset: "gcc-toolset-{{ DTSVER }}"
 
-- name: Manage subscription
-  when:
-    - ansible_distribution == 'RedHat'
-    - ansible_distribution_major_version|int >= 8
-  command: |
-    subscription-manager register \
-      --org={{ lookup('env','RH_ORG') }} \
-      --activationkey={{ lookup('env','RH_KEY') }} \
-      --force
-  args:
-    creates: /etc/pki/consumer/key.pem
-
-- name: Yum install development tools
+- name: Install development tools
   when: ansible_os_family == 'RedHat' and development_groupinstall
-  yum:
+  package:
     name: "{{ development_group }}"
     state: "{{ compilers_present }}"
     update_cache: true
@@ -70,9 +58,9 @@
   tags:
     - base_gcc
 
-- name: Yum install gcc
+- name: Install gcc
   when: ansible_os_family == 'RedHat' and not development_groupinstall
-  yum:
+  package:
     name:
       - binutils
       - bison
